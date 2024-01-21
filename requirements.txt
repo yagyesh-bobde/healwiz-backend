@@ -1,0 +1,7 @@
+flask
+scipy==1.1.1
+opencv-python
+matplotlib
+numpy
+pandas
+scikit-learn==1.2.2
