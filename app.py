@@ -235,11 +235,15 @@ def predict_diabetes():
 # eye cataract disease prediction
 @app.route("/predict_eye")
 def predict_image():
+    # eye disesae prediction
+    # categories = ['cataract', 'glaucoma', 'retinopathy', 'normal']
+    CLASSES = { 0 : 'Cataract', 1: 'Diabetes', 2: 'Glaucoma', 3: 'Normal', 4: 'Other'}
+
     url = request.args.get('url')
 
-    model = load_model('models/vgg16.h5')
+    model = load_model('models/eye-model.h5')
     # img = image.load_img("uploads/"+name, target_size=(224, 224))
-    result = process_image_from_url(url, target_size=(224, 224))
+    result = process_image_from_url(url, target_size=(150,150))
     img =""
     if(result["status"]): 
         img = result["image"]
@@ -249,22 +253,21 @@ def predict_image():
             "status" : False, 
             "message" : "Error! No image."
         }
-    x = image.img_to_array(img)
-    x = x/255
-    x = np.expand_dims(x, axis=0)
-    img_data = x
-    # model.predict(img_data)
-    a = np.argmax(model.predict(img_data), axis=1)
-    if(a == 0):
-        temp = "Cataract"
-    else:
-        temp = "Normal"
-    return json.dumps({
-        "prediction": {
-            "confidence" : "", 
-            "result" : temp
-        }
-    })
+    test = np.array(img)
+    test = np.expand_dims(test, axis=0)
+    
+    model = load_model('models/eye-model.h5')
+    prediction = model.predict(test)
+    predictions = prediction.tolist()[0]
+    print("Predictions: ", predictions)
+    prediction = np.argmax(predictions)
+    print("Final Prediction: ", prediction)
+    percentage = predictions[prediction]
+
+    responses = jsonify(prediction=prediction, percentage=percentage, disease=CLASSES[prediction])
+    responses.status_code = 200
+
+    return (responses)
 
 
 
@@ -297,25 +300,27 @@ def detect():
         accuracy = round(accuracy*100, 2)
         medicine=findMedicine(pred)
 
-        json_data = json.dumps({
-            "status" : True,
-            "message" : "Success",
-            "detected": False if pred == 2 else True,
-            "disease": disease,
-            "accuracy": accuracy,
-            "medicine" : medicine,
-        })
+        # json_data = json.dumps({
+            
+        # })
 
 
         
-        return Response(json_data, content_type='application/json')
+        return jsonify(
+            status = True,
+            message = "Success",
+            detected= False if pred == 2 else True,
+            disease= disease,
+            accuracy= accuracy,
+            medicine= medicine
+        )
 
     except Exception:
-        return Response(json.dumps({
-            "status" : False, 
-            "message" : "Error!"
-        }), content_type="Application/json")
+        return jsonify(
+            status = False,
+            message = "Error"
+        )
 
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)

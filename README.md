@@ -14,3 +14,9 @@ https://www.figma.com/file/FAHmNLinTAdnOQVDRtLwoI/Solution-Challenge-UI?type=des
 ## Tech Stack
 - Flask
 - Python
+
+
+## References: 
+1. Eye Disesase - https://github.com/P-stha12/a-eye.ai/blob/main/ML/final.ipynb
+2. Skin Disease Prediction - 
+3. SBP/DBP/Heart Rate - 
