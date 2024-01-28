@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, Response
+# from keras.applications.resnet import preprocess_input
 from functions import getMetrics, process_image_from_url, findMedicine
 from scipy.signal import butter, lfilter, detrend
 import cv2
@@ -8,7 +9,6 @@ import json
 from datetime import datetime
 import cv2
 from keras.preprocessing import image
-from keras.applications.resnet import preprocess_input
 import tensorflow as tf
 from keras.models import load_model, model_from_json
 import pickle
@@ -317,5 +317,5 @@ def detect():
         }), content_type="Application/json")
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
