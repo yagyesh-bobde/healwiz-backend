@@ -164,7 +164,8 @@ def metrics():
     print("DBP : {}".format(DBP))
     
     # result = "https://res.cloudinary.com/" + url 
-    return json.dumps({
+
+    response_data = {
         "heart_rate": hr,
         "systolic_blood_pressure": SBP,
         "diastolic_blood_pressure": DBP, \
@@ -182,7 +183,8 @@ def metrics():
                 "y": avg_blue_2[:,1].tolist()
             }
         }
-    })
+    }
+    return jsonify(response_data)
 
 
 
@@ -200,9 +202,10 @@ def predict_tumor():
             "status": True
         })
     except Exception: 
-        return json.dumps({
-            "status": True
-        })
+        return jsonify(
+            status = False,
+            message = "Error"
+        )
 
 
 @app.route('/predict_diabetes', methods=['POST'])
@@ -220,16 +223,18 @@ def predict_diabetes():
 
             data = np.array([[preg, glucose, bp, st, insulin, bmi, dpf, age]])
             my_prediction = classifier.predict(data)
-
-            return json.dumps({
-                "data" : data,
-                "prediction": my_prediction
-            })
+            
+            return jsonify(
+                status = True,
+                message = "Success",
+                prediction = my_prediction,
+                data = data
+            )
         except ValueError:
-            return json.dumps({ 
-                "status" : False, 
-                "message" : "Error!"
-            })
+            return jsonify(
+                status = False,
+                message = "Error"
+            )
 
 
 # eye cataract disease prediction
@@ -249,10 +254,10 @@ def predict_image():
         img = result["image"]
 
     else: 
-        return {
-            "status" : False, 
-            "message" : "Error! No image."
-        }
+        return jsonify(
+            status= False, 
+            message= "Error! No image."
+        )
     test = np.array(img)
     test = np.expand_dims(test, axis=0)
     
