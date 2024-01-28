@@ -18,6 +18,7 @@ google-auth==2.26.2
 google-auth-oauthlib==1.2.0
 google-pasta==0.2.0
 grpcio==1.60.0
+gunicorn==21.2.0
 h5py==3.10.0
 idna==3.6
 itsdangerous==2.1.2
