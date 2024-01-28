@@ -43,15 +43,6 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order = 5):
 app = Flask(__name__)
 
 
-# Load the Random Forest CLassifier model
-FILENAME = 'models/diabetes-model.pkl'
-CANCER_FILE = 'models/cancer-model.pkl'
-classifier = pickle.load(open(FILENAME, "rb"))
-rf = pickle.load(open(CANCER_FILE, 'rb'))
-
-brain = "models/cnn-parameters-improvement-24-0.85.model"
-
-
 
 @app.route('/')
 def index():
@@ -186,55 +177,6 @@ def metrics():
     }
     return jsonify(response_data)
 
-
-
-# @app.route("/eye"): 
-# def eye() :
-
-#     return json.dumps()
-
-@app.route("/predict_tumor")
-def predict_tumor():
-    try: 
-        brain_model = load_model(brain)
-        
-        return json.dumps({
-            "status": True
-        })
-    except Exception: 
-        return jsonify(
-            status = False,
-            message = "Error"
-        )
-
-
-@app.route('/predict_diabetes', methods=['POST'])
-def predict_diabetes():
-    if request.method == 'POST':
-        try:
-            preg = int(request.form['pregnancies'])
-            glucose = int(request.form['glucose'])
-            bp = int(request.form['bloodpressure'])
-            st = int(request.form['skinthickness'])
-            insulin = int(request.form['insulin'])
-            bmi = float(request.form['bmi'])
-            dpf = float(request.form['dpf'])
-            age = int(request.form['age'])
-
-            data = np.array([[preg, glucose, bp, st, insulin, bmi, dpf, age]])
-            my_prediction = classifier.predict(data)
-            
-            return jsonify(
-                status = True,
-                message = "Success",
-                prediction = my_prediction,
-                data = data
-            )
-        except ValueError:
-            return jsonify(
-                status = False,
-                message = "Error"
-            )
 
 
 # eye cataract disease prediction
