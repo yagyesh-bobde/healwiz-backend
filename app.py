@@ -269,7 +269,7 @@ def predict_image():
     print("Final Prediction: ", prediction)
     percentage = predictions[prediction]
 
-    responses = jsonify(prediction=prediction, percentage=percentage, disease=CLASSES[prediction])
+    responses = jsonify(prediction=str(prediction), percentage=str(percentage), disease=CLASSES[prediction])
     responses.status_code = 200
 
     return (responses)
@@ -316,7 +316,7 @@ def detect():
             message = "Success",
             detected= False if pred == 2 else True,
             disease= disease,
-            accuracy= accuracy,
+            accuracy= str(accuracy),
             medicine= medicine
         )
 
