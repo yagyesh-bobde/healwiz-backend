@@ -186,33 +186,34 @@ def predict_image():
     # categories = ['cataract', 'glaucoma', 'retinopathy', 'normal']
     CLASSES = { 0 : 'Cataract', 1: 'Diabetes', 2: 'Glaucoma', 3: 'Normal', 4: 'Other'}
 
-    url = request.args.get('url')
+    # url = request.args.get('url')
+    if request.method == 'POST':
+        url = request.json['url']
+        model = load_model('models/eye-model.h5')
+        # img = image.load_img("uploads/"+name, target_size=(224, 224))
+        result = process_image_from_url(url, target_size=(150,150))
+        img =""
+        if(result["status"]): 
+            img = result["image"]
 
-    model = load_model('models/eye-model.h5')
-    # img = image.load_img("uploads/"+name, target_size=(224, 224))
-    result = process_image_from_url(url, target_size=(150,150))
-    img =""
-    if(result["status"]): 
-        img = result["image"]
-
-    else: 
-        return jsonify(
-            status= False, 
-            message= "Error! No image."
-        )
-    test = np.array(img)
-    test = np.expand_dims(test, axis=0)
-    
-    model = load_model('models/eye-model.h5')
-    prediction = model.predict(test)
-    predictions = prediction.tolist()[0]
-    print("Predictions: ", predictions)
-    prediction = np.argmax(predictions)
-    print("Final Prediction: ", prediction)
-    percentage = predictions[prediction]
+        else: 
+            return jsonify(
+                status= False, 
+                message= "Error! No image."
+            )
+        test = np.array(img)
+        test = np.expand_dims(test, axis=0)
+        
+        model = load_model('models/eye-model.h5')
+        prediction = model.predict(test)
+        predictions = prediction.tolist()[0]
+        print("Predictions: ", predictions)
+        prediction = np.argmax(predictions)
+        print("Final Prediction: ", prediction)
+        percentage = predictions[prediction]
 
 
-    return jsonify(prediction=str(prediction), percentage=str(percentage), disease=CLASSES[prediction])
+        return jsonify(prediction=str(prediction), percentage=str(percentage), disease=CLASSES[prediction])
 
 
 
