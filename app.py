@@ -180,7 +180,7 @@ def metrics():
 
 
 # eye cataract disease prediction
-@app.route("/predict_eye")
+@app.route("/predict_eye", methods=['POST'])
 def predict_image():
     # eye disesae prediction
     # categories = ['cataract', 'glaucoma', 'retinopathy', 'normal']
