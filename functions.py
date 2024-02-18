@@ -9,8 +9,12 @@ import base64
 
 def process_image_from_url(url, target_size=(300, 300)):
     try:
-        
-        image_data = base64.b64decode(url.split("Base64 URL: ")[1])
+        base_img = url[url.find("/9j")::]
+
+
+
+        print(base_img)
+        image_data = base64.b64decode(base_img)
         
         # Open the image using Pillow (PIL)
         image = Image.open(BytesIO(image_data))
