@@ -5,21 +5,23 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 import requests
+import base64
 
 def process_image_from_url(url, target_size=(300, 300)):
     try:
-        # Download the image from the URL
-        response = requests.get(url)
-        print("response", response)
-        response.raise_for_status()
-
+        
+        image_data = base64.b64decode(url.split("Base64 URL: ")[1])
+        
         # Open the image using Pillow (PIL)
-        image = Image.open(BytesIO(response.content))
+        image = Image.open(BytesIO(image_data))
+
+        # # Open the image using Pillow (PIL)
+        # image = Image.open(BytesIO(response.content))
 
         # Resize the image to the target size
         resized_image = image.resize(target_size)
 
-        
+        print(resized_image)
         return {
             "status" : True, 
             "image" : resized_image,

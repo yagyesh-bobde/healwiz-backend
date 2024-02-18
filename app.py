@@ -217,54 +217,59 @@ def predict_image():
 
 
 # detect skin disease
-@app.route('/predict_skin')
+@app.route('/predict_skin', methods=['POST'])
 def detect():
-    url = request.args.get("url")
-    try:
-        j_file = open('models/model.json', 'r')
-        loaded_json_model = j_file.read()
-        j_file.close()
-        model = model_from_json(loaded_json_model)
-        model.load_weights('models/model.h5')
-        result = process_image_from_url(url, target_size=(224, 224))
-        if(result["status"]): 
-            img = result["image"]
-
-        else: 
-            return {
-                "status" : False, 
-                "message" : "Error! No image."
-            }
-        img = np.array(img)
-        img = img.reshape((1, 224, 224, 3))
-        img = img/255
-        prediction = model.predict(img)
-        pred = np.argmax(prediction)
-        disease = SKIN_CLASSES[pred]
-        accuracy = prediction[0][pred]
-        accuracy = round(accuracy*100, 2)
-        medicine=findMedicine(pred)
-
-        # json_data = json.dumps({
+    if request.method == 'POST':
+        url = request.json['url']
+        try:
+            j_file = open('models/model.json', 'r')
+            loaded_json_model = j_file.read()
+            j_file.close()
+            model = model_from_json(loaded_json_model)
+            model.load_weights('models/model.h5')
             
-        # })
+            
+            result = process_image_from_url(url, target_size=(224, 224))
 
 
-        
-        return jsonify(
-            status = True,
-            message = "Success",
-            detected= False if pred == 2 else True,
-            disease= disease,
-            accuracy= str(accuracy),
-            medicine= medicine
-        )
+            if(result["status"]): 
+                img = result["image"]
 
-    except Exception:
-        return jsonify(
-            status = False,
-            message = "Error"
-        )
+            else: 
+                return {
+                    "status" : False, 
+                    "message" : "Error! No image."
+                }
+            img = np.array(img)
+            img = img.reshape((1, 224, 224, 3))
+            img = img/255
+            prediction = model.predict(img)
+            pred = np.argmax(prediction)
+            disease = SKIN_CLASSES[pred]
+            accuracy = prediction[0][pred]
+            accuracy = round(accuracy*100, 2)
+            medicine=findMedicine(pred)
+
+            # json_data = json.dumps({
+                
+            # })
+
+
+            
+            return jsonify(
+                status = True,
+                message = "Success",
+                detected= False if pred == 2 else True,
+                disease= disease,
+                accuracy= str(accuracy),
+                medicine= medicine
+            )
+
+        except Exception:
+            return jsonify(
+                status = False,
+                message = "Error"
+            )
 
 
 if __name__ == '__main__':
