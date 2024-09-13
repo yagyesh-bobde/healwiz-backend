@@ -17,6 +17,6 @@ https://github.com/yagyesh-bobde/healwiz-website-frontend
 
 
 ## References/Credits to the original authors/creators of models: 
-1. Eye Disesase - https://github.com/P-stha12/a-eye.ai/blob/main/ML/final.ipynb
+1. Eye Disesase - https://github.com/P-stha12/a-eye.ai/blob/main/ML/final.ipynb - Model Used VGG19
 2. Skin Disease Prediction - 
 3. SBP/DBP/Heart Rate - 
